@@ -7,6 +7,19 @@ import "@testing-library/jest-dom/extend-expect";
 
 // src/setupTests.js
 import { server } from "./__tests__/__mocks__/msw/server";
+
+import { TextEncoder, TextDecoder } from "util";
+import { resetDB } from "./__tests__/__mocks__/db/utils/reset-db";
+
+beforeEach(async ()=> {
+    await resetDB();
+})
+
+global.TextDecoder = TextDecoder;
+global.TextEncoder = TextEncoder;
+
+
+
 // Establish API mocking before all tests.
 beforeAll(() => server.listen());
 

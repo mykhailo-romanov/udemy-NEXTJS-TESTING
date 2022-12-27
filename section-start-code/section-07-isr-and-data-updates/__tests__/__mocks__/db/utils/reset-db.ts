@@ -3,8 +3,10 @@ import { filenames, writeJSONToFile } from "@/lib/db/db-utils";
 
 export const resetDB = async () => {
   // failsafe against resetting production db!
-  const safeToReset = process.env.NODE_ENV === "test" || process.env.CYPRESS;
-  if (!safeToReset) {
+  const safeToReset = true
+
+  // console.log(11111111111111)
+  if (safeToReset) {
     // eslint-disable-next-line no-console
     console.log(
       "WARNING: database reset unavailable outside test environment!"
