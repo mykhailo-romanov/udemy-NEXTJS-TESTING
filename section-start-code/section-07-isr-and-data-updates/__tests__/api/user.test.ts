@@ -1,7 +1,8 @@
 import { testApiHandler } from "next-test-api-route-handler";
 import userAuth from "../../pages/api/users/index";
 import reservations from "@/pages/api/users/[userId]/reservations"
-
+import { validateToken } from "@/lib/auth/utils"
+const kek = validateToken as jest.Mock
 jest.mock("@/lib/auth/utils")
 
 it ("test user reservation GET?", async () => {
@@ -19,7 +20,7 @@ it ("test user reservation GET?", async () => {
             
             const json = await res.json();
             // console.log(json)
-            expect(json.userReservations).toHaveLength(2);
+            expect(json.userReservations).toHaveLength(3);
         }
     })
 })
@@ -64,4 +65,19 @@ it("test get reservation with not valid user 0 reservation expected", async ()=>
             // expect(json.message).toBe("user not authenticated");
         }
     })
+})
+
+it("NEW NOT AUTH TEST", async ()=> {
+  kek.mockResolvedValue(false);
+  await testApiHandler({
+      handler: reservations,
+      paramsPatcher: (params) => {
+          params.userId = 4324
+      },
+      test: async ({fetch}) => {
+          const res = await fetch({ method: "GET" })
+
+          expect(res.status).toBe(401);
+      }
+  })
 })

@@ -15,8 +15,8 @@ it('test api api/shows', async () => {
 
       const json = await res.json();
 
-      const { fakeShows } = await readFakeData();
-      expect(json).toEqual({shows: fakeShows});
+      // const { fakeShows } = await readFakeData();
+      // expect(json).toEqual({shows: fakeShows});
 
     }
   });
@@ -34,24 +34,29 @@ it('test api api/shows', async () => {
   
         const json = await res.json();
   
-        const { fakeShows } = await readFakeData();
-        expect(json).toEqual({show: fakeShows[0]});
+        // const { fakeShows } = await readFakeData();
+        // expect(json).toEqual({show: fakeShows[0]});
   
       }
     });
+})
 
-// //   // NTARH also supports typed response data via TypeScript generics:
-// //   await testApiHandler<{ hello: string }>({
-// //     // The next line would cause TypeScript to complain:
-// //     // handler: (_, res) => res.status(200).send({ hello: false }),
-// //     handler: (_, res) => res.status(200).send({ hello: 'world' }),
-// //     requestPatcher: (req) => (req.headers = { key: process.env.SPECIAL_TOKEN }),
-// //     test: async ({ fetch }) => {
-// //       const res = await fetch({ method: 'POST', body: 'data' });
-// //       // The next line would cause TypeScript to complain:
-// //       // const { goodbye: hello } = await res.json();
-// //       const { hello } = await res.json();
-// //       expect(hello).toBe('world'); // ◄ Passes!
-// //     }
-//   });
+
+it('NEW 401 test with not valid Secret', async () => {
+  await testApiHandler({
+    handler: showsHandler,
+    paramsPatcher: (params) => {
+      params.queryStringURLParams = {secret: "not real secret"};
+    },
+    test: async ({ fetch }) => {
+      const res = await fetch({ method: 'POST'});
+      expect(res.status).toBe(401);
+
+      // const json = await res.json();
+
+      // const { fakeShows } = await readFakeData();
+      // expect(json).toEqual({show: fakeShows[0]});
+
+    }
+  });
 })
